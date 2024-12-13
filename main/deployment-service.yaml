@@ -47,3 +47,4 @@ spec:
       port: 9088
       targetPort: 1526
       nodePort: 30509
+    type: NodePort
