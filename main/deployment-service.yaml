@@ -46,4 +46,5 @@ spec:
     - protocol: TCP
       port: 1526
       targetPort: 1526
+      nodePort: 9088
   type: NodePort
