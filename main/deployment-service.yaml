@@ -35,12 +35,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: informix-student1
-  namespace: informix-students
+  name: informix
+  namespace: informix
 spec:
   type: NodePort
   selector:
-    app: informix-student1
+    app: informix
   ports:
     - protocol: TCP
       port: 9088
