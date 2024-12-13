@@ -43,8 +43,8 @@ spec:
   selector:
     app: informix
   ports:
-    - protocol: TCP
-      port: 9088
-      targetPort: 1526
-      nodePort: 30509
-    type: NodePort
+    - name: informix-port
+      protocol: TCP
+      port: 9088       # Externe poort binnen de cluster service
+      targetPort: 1526 # Interne containerpoort
+      nodePort: 30509  # Externe NodePort op de cluster node
