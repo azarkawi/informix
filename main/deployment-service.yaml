@@ -46,4 +46,4 @@ spec:
     - protocol: TCP
       port: 1526
       targetPort: 1526
-  type: ClusterIP
+  type: NodePort
