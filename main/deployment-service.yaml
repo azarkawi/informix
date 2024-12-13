@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: informix
+  namespace: informix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: informix
+  template:
+    metadata:
+      labels:
+        app: informix
+    spec:
+      containers:
+      - name: informix
+        image: ibmcom/informix-developer-database:latest
+        ports:
+        - containerPort: 1526
+        volumeMounts:
+        - mountPath: /opt/ibm/data
+          name: informix-storage
+        env:
+        - name: LICENSE
+          value: "accept"
+        envFrom:
+        - secretRef:
+            name: informix-secret
+      volumes:
+      - name: informix-storage
+        persistentVolumeClaim:
+          claimName: informix-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: informix
+  namespace: informix
+  labels:
+    app: informix
+spec:
+  selector:
+    app: informix
+  ports:
+    - protocol: TCP
+      port: 1526
+      targetPort: 1526
+  type: ClusterIP
