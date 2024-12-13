@@ -17,7 +17,7 @@ spec:
       - name: informix
         image: ibmcom/informix-developer-database:latest
         ports:
-        - containerPort: 9088
+        - containerPort: 1526
         volumeMounts:
         - mountPath: /opt/ibm/data
           name: informix-storage
@@ -45,6 +45,6 @@ spec:
   ports:
     - protocol: TCP
       port: 9088
-      targetPort: 9088
+      targetPort: 1526
       nodePort: 30509
   type: NodePort
