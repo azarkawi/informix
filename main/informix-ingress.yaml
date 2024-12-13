@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: informix-ingress
+  namespace: informix
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: informix.informix.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: informix
+            port:
+              number: 1526
