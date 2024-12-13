@@ -17,7 +17,7 @@ spec:
       - name: informix
         image: ibmcom/informix-developer-database:latest
         ports:
-        - containerPort: 1526
+        - containerPort: 9088
         volumeMounts:
         - mountPath: /opt/ibm/data
           name: informix-storage
