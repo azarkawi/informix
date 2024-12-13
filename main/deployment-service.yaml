@@ -48,3 +48,4 @@ spec:
       port: 9088       # Externe poort binnen de cluster service
       targetPort: 1526 # Interne containerpoort
       nodePort: 30509  # Externe NodePort op de cluster node
+   type: NodePort
