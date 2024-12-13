@@ -24,6 +24,9 @@ spec:
         env:
         - name: LICENSE
           value: "accept"
+        envFrom:
+        - secretRef:
+            name: informix-secret
       volumes:
       - name: informix-storage
         persistentVolumeClaim:
