@@ -44,6 +44,7 @@ spec:
   selector:
     app: informix
   ports:
+    - name: informix-port
       protocol: TCP
       port: 9088       # Externe poort binnen de cluster service
       targetPort: 1526 # Interne containerpoort
