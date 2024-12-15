@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: informix
+  namespace: informix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: informix
+  template:
+    metadata:
+      labels:
+        app: informix
+    spec:
+      securityContext:
+        runAsUser: 200         # Gebruiker 'informix' heeft UID 200
+        fsGroup: 200           # Zorg ervoor dat de groep ook toegang heeft
+      initContainers:
+        - name: init-permissions
+          image: alpine
+          securityContext:
+            runAsUser: 0         # Voer de init-container uit als root
+          command: ["sh", "-c", "addgroup -g 200 informix || true && adduser -u 200 -G informix informix || true && chown -R informix:informix /opt/ibm/data && chmod -R 755 /opt/ibm/data"]
+          volumeMounts:
+            - mountPath: /opt/ibm/data
+              name: informix-storage
+      containers:
+        - name: informix
+          image: ibmcom/informix-developer-database:latest
+          ports:
+            - containerPort: 9088  # Poort voor Informix
+            - containerPort: 9089  # Poort voor Informix
+          volumeMounts:
+            - mountPath: /opt/ibm/data
+              name: informix-storage
+          env:
+            - name: LICENSE
+              value: "accept"
+            - name: INFORMIX_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: informix-config
+                  key: INFORMIX_VERSION
+          envFrom:
+            - secretRef:
+                name: informix-secret
+      volumes:
+        - name: informix-storage
+          persistentVolumeClaim:
+            claimName: informix-pvc
