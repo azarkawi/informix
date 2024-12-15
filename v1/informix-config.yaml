@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: informix-config
+  namespace: informix
+data:
+  INFORMIX_VERSION: "14.10"  # Dit kan worden aangepast aan de gewenste versie
