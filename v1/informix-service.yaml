@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: informix
+  namespace: informix
+  labels:
+    app: informix
+spec:
+  selector:
+    app: informix
+  ports:
+    - name: port-9088  # Naam van de poort
+      protocol: TCP
+      port: 9088        # Externe poort
+      targetPort: 9088   # Interne poort in de container
+      nodePort: 30509    # Externe toegangspoort
+    - name: port-9089  # Naam van de poort
+      protocol: TCP
+      port: 9089        # Externe poort
+      targetPort: 9089   # Interne poort in de container
+      nodePort: 30510    # Externe toegangspoort
