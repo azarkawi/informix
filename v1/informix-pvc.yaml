@@ -4,6 +4,8 @@ metadata:
   name: informix-pvc
   namespace: informix
 spec:
+  storageClassName: ""
+  volumeName: informix-pv
   accessModes:
     - ReadWriteOnce
   resources:
