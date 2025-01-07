@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: informix-pvc
+  namespace: informix-v12
+spec:
+  storageClassName: ""
+  volumeName: informix-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
