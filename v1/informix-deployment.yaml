@@ -21,13 +21,17 @@ spec:
           image: alpine
           securityContext:
             runAsUser: 0         # Voer de init-container uit als root
-          command: ["sh", "-c", "addgroup -g 200 informix || true && adduser -u 200 -G informix informix || true && chown -R informix:informix /opt/ibm/data && chmod -R 755 /opt/ibm/data"]
+          command: ["sh", "-c", "addgroup -g 200 informix || true \
+                         && adduser -u 200 -G informix informix || true \
+                         && chown -R informix:informix /opt/ibm/data \
+                         && chmod -R 755 /opt/ibm/data \
+                         && chmod 660 /opt/ibm/data/spaces/*.000"]
           volumeMounts:
             - mountPath: /opt/ibm/data
               name: informix-storage
       containers:
         - name: informix
-          image: ibmcom/informix-developer-database:12.10.FC12W1DE
+          image: ibmcom/informix-developer-database:14.10.FC7W1DE
           ports:
             - containerPort: 9088  # Poort voor Informix
             - containerPort: 9089  # Poort voor Informix
