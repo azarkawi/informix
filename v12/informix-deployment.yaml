@@ -31,7 +31,7 @@ spec:
               name: informix-storage
       containers:
         - name: informix
-          image: ibmcom/informix-developer-database:14.10.FC7W1DE
+          image: ibmcom/informix-developer-database:12.10.FC12W1DE
           ports:
             - containerPort: 9088  # Poort voor Informix
             - containerPort: 9089  # Poort voor Informix
