@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: informix
+  namespace: {{NAMESPACE}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: informix
+  template:
+    metadata:
+      labels:
+        app: informix
+    spec:
+      securityContext:
+        runAsUser: 300         # Gebruiker 'Yonis' heeft UID 300
+        fsGroup: 300           # Groep 'Cursist' heeft GID 300
+      initContainers:
+        - name: init-permissions
+          image: alpine
+          securityContext:
+            runAsUser: 0         # Voer de init-container uit als root
+          command: ["sh", "-c", "addgroup -g 300 Cursist || true \
+                     && adduser -u 300 -G Cursist Yonis || true \
+                     && chown -R Yonis:Cursist /opt/ibm/data \
+                     && chmod -R 755 /opt/ibm/data \
+                     && chmod 660 /opt/ibm/data/spaces/*.000"]
+          volumeMounts:
+            - mountPath: /opt/ibm/data
+              name: informix-storage
+      containers:
+        - name: informix
+          image: ibmcom/informix-developer-database:{{DB_VERSION}}.FC7W1DE
+          ports:
+            - containerPort: 9088  # Poort voor Informix
+            - containerPort: 9089  # Poort voor Informix
+          volumeMounts:
+            - mountPath: /opt/ibm/data
+              name: informix-storage
+          env:
+            - name: LICENSE
+              value: "accept"
+            - name: INFORMIX_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: informix-config
+                  key: INFORMIX_VERSION
+          envFrom:
+            - secretRef:
+                name: informix-secret
+          securityContext:
+            runAsUser: 300         # Draai als gebruiker 'Yonis'
+            fsGroup: 300           # Groep 'Cursist'
+      volumes:
+        - name: informix-storage
+          persistentVolumeClaim:
+            claimName: informix-pvc
