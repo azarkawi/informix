@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: informix-config
+  namespace: {{NAMESPACE}}
+data:
+  INFORMIX_VERSION: "{{DB_VERSION}}.FC7W1DE"
