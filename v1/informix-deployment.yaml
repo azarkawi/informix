@@ -18,7 +18,7 @@ spec:
         fsGroup: 200           # Zorg ervoor dat de groep ook toegang heeft
       initContainers:
         - name: init-permissions
-          image: debian
+          image: alpine
           securityContext:
             runAsUser: 0         # Voer de init-container uit als root
           command: ["sh", "-c", "addgroup -g 200 informix || true \
