@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: informix
-  namespace: informix
+  namespace: informixtest
   labels:
     app: informix
 spec:
