@@ -4,4 +4,4 @@ metadata:
   name: informix-config
   namespace: informixtest
 data:
-  INFORMIX_VERSION: "15.0.0.0"  # Dit kan worden aangepast aan de gewenste versie
+  INFORMIX_VERSION: "14.10.FC7W1DE"  # Dit kan worden aangepast aan de gewenste versie
