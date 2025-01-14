@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: informix-pvc
-  namespace: informix
+  namespace: informixtest
 spec:
   storageClassName: ""
   volumeName: informix-pv
