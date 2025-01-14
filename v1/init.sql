@@ -1,0 +1,4 @@
+CREATE DATABASE cursist_db;
+CREATE USER cursist IDENTIFIED BY 'password123';
+GRANT CONNECT TO cursist;
+GRANT RESOURCE TO cursist;
