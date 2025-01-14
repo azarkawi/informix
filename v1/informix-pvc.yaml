@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: informix-pvc
+  name: informixtest-pvc
   namespace: informixtest
 spec:
   storageClassName: ""
-  volumeName: informix-pv
+  volumeName: informixtest-pv
   accessModes:
     - ReadWriteOnce
   resources:
