@@ -19,9 +19,10 @@ spec:
               addgroup -g 200 informix || true
               adduser -u 200 -G informix informix || true
               # Create group and user directly
-              groupadd -g 201 user2 || true
-              useradd -u 201 -g user2 -m user2 || true
-              # Create directories for user2
+              # Manueel de groep en gebruiker toevoegen door /etc/passwd en /etc/group aan te passen
+              echo "user2:x:201:201::/home/user2:/bin/sh" >> /etc/passwd
+              echo "user2:x:201:" >> /etc/group
+              # Zorg ervoor dat de map voor user2 bestaat
               mkdir -p /opt/ibm/data/user2 || true
               # Set the appropriate ownership and permissions
               chown -R informix:informix /opt/ibm/data || true
