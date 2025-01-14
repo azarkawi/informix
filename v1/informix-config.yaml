@@ -2,6 +2,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: informix-config
-  namespace: informix
+  namespace: informixtest
 data:
   INFORMIX_VERSION: "15.0.0.0"  # Dit kan worden aangepast aan de gewenste versie
