@@ -10,7 +10,6 @@ spec:
         runAsUser: 0  # Run as root to set up the permissions
       containers:
         - name: init-permissions
-          image: rhel8:8.5
           command:
             - "sh"
             - "-c"
