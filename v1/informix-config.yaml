@@ -5,3 +5,18 @@ metadata:
   namespace: informixtest
 data:
   INFORMIX_VERSION: "14.10.FC7W1DE"  # Dit kan worden aangepast aan de gewenste versie
+  ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: informix-scripts
+  namespace: informix
+data:
+  user-setup.sh: |
+    #!/bin/sh
+    set -e
+    # Voeg een gebruiker toe aan het OS
+    useradd test1 || true
+    echo "test1:test123456789!" | chpasswd
+    # Voer een query uit in Informix
+    echo "GRANT CONNECT TO test1;" | dbaccess sysadmin -
