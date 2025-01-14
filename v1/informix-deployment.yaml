@@ -75,9 +75,6 @@ spec:
         - name: informix-storage
           persistentVolumeClaim:
             claimName: informixtest-pvc
-        - name: informix-config
-          persistentVolumeClaim:
-            claimName: informix-config-pvc
         - name: script-volume
           configMap:
             name: informix-scripts
