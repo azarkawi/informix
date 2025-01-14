@@ -32,8 +32,8 @@ spec:
       containers:
         - name: informix
           securityContext:
-            runAsUser: 200       # Container draait als UID 300
-            fsGroup: 200         # Groep met GID 300
+            runAsUser: 200       # Container draait als UID 200
+            fsGroup: 200         # Groep met GID 200
           image: ibmcom/informix-developer-database:14.10.FC7W1DE
           ports:
             - containerPort: 9088  # Poort voor Informix
@@ -41,6 +41,8 @@ spec:
           volumeMounts:
             - mountPath: /opt/ibm/data
               name: informix-storage
+            - mountPath: /opt/ibm/init-scripts
+              name: init-scripts
           env:
             - name: LICENSE
               value: "accept"
@@ -49,10 +51,18 @@ spec:
                 configMapKeyRef:
                   name: informix-config
                   key: INFORMIX_VERSION
-          envFrom:
-            - secretRef:
-                name: informix-secret
+          command:
+            - /bin/bash
+            - -c
+            - |
+              cp /opt/ibm/init-scripts/init.sql /opt/ibm/data/init.sql && \
+              oninit && \
+              echo "Voer init-script uit om gebruikers en databases aan te maken..." && \
+              dbaccess - /opt/ibm/data/init.sql
       volumes:
         - name: informix-storage
           persistentVolumeClaim:
             claimName: informixtest-pvc
+        - name: init-scripts
+          configMap:
+            name: init-scripts
