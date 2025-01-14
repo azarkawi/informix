@@ -14,13 +14,13 @@ spec:
         app: informix
     spec:
       securityContext:
-        runAsUser: 200         # Gebruiker 'informix' heeft UID 200
-        fsGroup: 200           # Zorg ervoor dat de groep ook toegang heeft
+        runAsUser: 200
+        fsGroup: 200
       initContainers:
         - name: init-onconfig
           image: alpine
           securityContext:
-            runAsUser: 0       # Voer als root uit om bestandstoegang te garanderen
+            runAsUser: 0
           command: ["sh", "-c", "sed -i 's/^usermapping off/usermapping basic/' /opt/ibm/config/onconfig"]
           volumeMounts:
             - mountPath: /opt/ibm/config
@@ -40,8 +40,8 @@ spec:
         - name: init-user-setup
           image: alpine
           securityContext:
-            runAsUser: 0       # Zorg ervoor dat dit script rootrechten heeft
-          command: ["sh", "-c", "/scripts/user-setup.sh"]
+            runAsUser: 0
+          command: ["sh", "-c", "chmod +x /scripts/user-setup.sh && /scripts/user-setup.sh"]
           volumeMounts:
             - mountPath: /scripts
               name: script-volume
@@ -49,8 +49,8 @@ spec:
         - name: informix
           image: ibmcom/informix-developer-database:14.10.FC7W1DE
           ports:
-            - containerPort: 9088  # Poort voor Informix
-            - containerPort: 9089  # Poort voor Informix
+            - containerPort: 9088
+            - containerPort: 9089
           volumeMounts:
             - mountPath: /opt/ibm/data
               name: informix-storage
@@ -59,7 +59,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["sh", "-c", "onmode -ky && oninit"]  # Herstart Informix na wijzigingen
+                command: ["sh", "-c", "onmode -ky && oninit"]
           env:
             - name: LICENSE
               value: "accept"
@@ -75,6 +75,9 @@ spec:
         - name: informix-storage
           persistentVolumeClaim:
             claimName: informixtest-pvc
+        - name: informix-config
+          persistentVolumeClaim:
+            claimName: informixtest-config-pvc
         - name: script-volume
           configMap:
             name: informix-scripts
