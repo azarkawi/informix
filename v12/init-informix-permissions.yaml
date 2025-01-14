@@ -15,22 +15,19 @@ spec:
             - "sh"
             - "-c"
             - |
-              # Install necessary tools (addgroup and adduser are in the shadow package)
-              apk update && apk add shadow
-              # Create the user and group with UID 200 and GID 200
-              addgroup -g 200 informix || true
-              adduser -u 200 -G informix informix || true
-              # Create group and user directly
-              # Create group and user directly
-              addgroup -g 201 user2 || true
-              adduser -u 201 -G user2 -s /bin/sh user2 || true
-              # Create directories for user2
+              # Create the 'informix' group and user with UID 200
+              groupadd -g 200 informix || true
+              useradd -u 200 -g informix -s /bin/bash informix || true
+              # Create the 'user2' group and user with UID 201
+              groupadd -g 201 user2 || true
+              useradd -u 201 -g user2 -s /bin/bash user2 || true
+              # Create directory for user2 if it doesn't exist
               mkdir -p /opt/ibm/data/user2 || true
-              # Set the appropriate ownership and permissions
+              # Set ownership and permissions for directories
               chown -R informix:informix /opt/ibm/data || true
               chmod -R 755 /opt/ibm/data || true
               chmod 660 /opt/ibm/data/spaces/*.000 || true
-              # Set user2's permissions
+              # Set ownership and permissions for the user2 directory
               chown -R user2:user2 /opt/ibm/data/user2 || true
               chmod -R 755 /opt/ibm/data/user2 || true
           volumeMounts:
