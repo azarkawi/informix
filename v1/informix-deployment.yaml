@@ -17,10 +17,18 @@ spec:
         runAsUser: 200         # Gebruiker 'informix' heeft UID 200
         fsGroup: 200           # Zorg ervoor dat de groep ook toegang heeft
       initContainers:
+        - name: init-onconfig
+          image: alpine
+          securityContext:
+            runAsUser: 0       # Voer als root uit om bestandstoegang te garanderen
+          command: ["sh", "-c", "sed -i 's/^usermapping off/usermapping basic/' /opt/ibm/config/onconfig"]
+          volumeMounts:
+            - mountPath: /opt/ibm/config
+              name: informix-config
         - name: init-permissions
           image: alpine
           securityContext:
-            runAsUser: 0         # Voer de init-container uit als root
+            runAsUser: 0
           command: ["sh", "-c", "addgroup -g 200 informix || true \
                          && adduser -u 200 -G informix informix || true \
                          && chown -R informix:informix /opt/ibm/data \
@@ -29,11 +37,16 @@ spec:
           volumeMounts:
             - mountPath: /opt/ibm/data
               name: informix-storage
+        - name: init-user-setup
+          image: alpine
+          securityContext:
+            runAsUser: 0       # Zorg ervoor dat dit script rootrechten heeft
+          command: ["sh", "-c", "/scripts/user-setup.sh"]
+          volumeMounts:
+            - mountPath: /scripts
+              name: script-volume
       containers:
         - name: informix
-          securityContext:
-            runAsUser: 200       # Container draait als UID 200
-            fsGroup: 200         # Groep met GID 200
           image: ibmcom/informix-developer-database:14.10.FC7W1DE
           ports:
             - containerPort: 9088  # Poort voor Informix
@@ -41,8 +54,12 @@ spec:
           volumeMounts:
             - mountPath: /opt/ibm/data
               name: informix-storage
-            - mountPath: /opt/ibm/init-scripts
-              name: init-scripts
+            - mountPath: /opt/ibm/config
+              name: informix-config
+          lifecycle:
+            postStart:
+              exec:
+                command: ["sh", "-c", "onmode -ky && oninit"]  # Herstart Informix na wijzigingen
           env:
             - name: LICENSE
               value: "accept"
@@ -51,18 +68,16 @@ spec:
                 configMapKeyRef:
                   name: informix-config
                   key: INFORMIX_VERSION
-          command:
-            - /bin/bash
-            - -c
-            - |
-              cp /opt/ibm/init-scripts/init.sql /opt/ibm/data/init.sql && \
-              oninit && \
-              echo "Voer init-script uit om gebruikers en databases aan te maken..." && \
-              dbaccess - /opt/ibm/data/init.sql
+          envFrom:
+            - secretRef:
+                name: informix-secret
       volumes:
         - name: informix-storage
           persistentVolumeClaim:
             claimName: informixtest-pvc
-        - name: init-scripts
+        - name: informix-config
+          persistentVolumeClaim:
+            claimName: informix-config-pvc
+        - name: script-volume
           configMap:
-            name: init-scripts
+            name: informix-scripts
