@@ -14,7 +14,7 @@ spec:
       protocol: TCP
       port: 9088        # Externe poort
       targetPort: 9088   # Interne poort in de container
-      nodePort: 305015    # Externe toegangspoort
+      nodePort: 30515    # Externe toegangspoort
     - name: port-9089  # Naam van de poort
       protocol: TCP
       port: 9089        # Externe poort
