@@ -4,4 +4,4 @@ metadata:
   name: informix-config
   namespace: informix
 data:
-  INFORMIX_VERSION: "15.0.0.0"  # Dit kan worden aangepast aan de gewenste versie
+  INFORMIX_VERSION: "12.10.FC12W1DE"  # Dit kan worden aangepast aan de gewenste versie
