@@ -27,7 +27,6 @@ do
   STUDENT="student-$i"
   NAMESPACE="${STUDENT}-ns"
   PVC_NAME="${STUDENT}-pvc"
-  SECRET_NAME="${STUDENT}-secret"
   CONFIGMAP_NAME="${STUDENT}-config"
   DEPLOYMENT_NAME="${STUDENT}-deploy"
   SERVICE_NAME="${STUDENT}-service"
@@ -53,10 +52,6 @@ do
       "$TEMPLATE_DIR/pvc-template.yaml" > "$STUDENT_DIR/pvc.yaml"
 
   sed -e "s/{{NAMESPACE}}/${NAMESPACE}/g" \
-      -e "s/{{ENCODED_PASSWORD}}/${ENCODED_PASSWORD}/g" \
-      "$TEMPLATE_DIR/secret-template.yaml" > "$STUDENT_DIR/secret.yaml"
-
-  sed -e "s/{{NAMESPACE}}/${NAMESPACE}/g" \
       -e "s/{{DB_VERSION}}/${DB_VERSION}/g" \
       "$TEMPLATE_DIR/deployment-template.yaml" > "$STUDENT_DIR/deployment.yaml"
 
@@ -76,13 +71,12 @@ do
   kubectl apply -f "$STUDENT_DIR/pv.yaml"
   kubectl apply -f "$STUDENT_DIR/pvc.yaml"
   kubectl apply -f "$STUDENT_DIR/configmap.yaml"
-  kubectl apply -f "$STUDENT_DIR/secret.yaml"
   kubectl apply -f "$STUDENT_DIR/deployment.yaml"
   kubectl apply -f "$STUDENT_DIR/service.yaml"
   kubectl apply -f "$STUDENT_DIR/init-informix-permissions.yaml"
 
   # Verbindingsinformatie opslaan
-  echo "${STUDENT}:${PASSWORD} ${NODE_IP}:${NODE_PORT}" >> $INFO_FILE
+  echo "${STUDENT} ${NODE_IP}:${NODE_PORT}" >> $INFO_FILE
 
   echo "${STUDENT} is succesvol gedeployed in namespace ${NAMESPACE}."
 done
