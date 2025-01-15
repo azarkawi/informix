@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: informix-pvc
+  name: {{NAMESPACE}}-pvc
   namespace: {{NAMESPACE}}
 spec:
   storageClassName: "local-path" # Gebruik de lokale storageClass in k3s
