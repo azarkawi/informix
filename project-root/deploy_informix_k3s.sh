@@ -8,7 +8,7 @@ OUTPUT_DIR="./generated"
 
 # Parameters
 read -p "Voer het aantal cursisten in: " NUM_STUDENTS
-read -p "Voer de Informix database versie in (bijv. 14.10): " DB_VERSION
+read -p "Voer de Informix database versie in (bijv. 14.10.FC7W1DE of 12.10.FC12W1DE): " DB_VERSION
 BASE_PORT=30000  # Startpoort voor NodePort binnen k3s standaard range
 
 # Verkrijg het IP-adres van de k3s-node
@@ -69,7 +69,7 @@ do
       "$TEMPLATE_DIR/pv-template.yaml" > "$STUDENT_DIR/pv.yaml"
 
   sed -e "s/{{NAMESPACE}}/${NAMESPACE}/g" \
-      "$TEMPLATE_DIR/job-template.yaml" > "$STUDENT_DIR/init-informix-permissions.yaml"
+      "$TEMPLATE_DIR/init-informix-permissions-template.yaml" > "$STUDENT_DIR/init-informix-permissions.yaml"
 
   # Toepassen van de YAML-bestanden op het cluster
   kubectl apply -f "$STUDENT_DIR/namespace.yaml"
