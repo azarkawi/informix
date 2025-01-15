@@ -5,7 +5,7 @@ metadata:
   namespace: {{NAMESPACE}}
 spec:
   storageClassName: "" # Gebruik de lokale storageClass in k3s
-  volumeName: {{NAMESPACE}}
+  volumeName: {{NAMESPACE}}-pv
   accessModes:
     - ReadWriteOnce
   resources:
