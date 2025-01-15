@@ -15,21 +15,25 @@ spec:
             - "sh"
             - "-c"
             - |
-              # Install the required utilities
-              apk update && apk add openssl shadow sudo
+      # Install the required utilities
+      apk update && apk add openssl passwd sudo shadow
 
-              # Generate a random password
-              password=$(openssl rand -base64 12)
-              echo "Generated password for guest user: \$password"
-              
-              # Create the guest user and set the password
-              useradd -m -u 1000 guest || true
-              echo "guest:\$password" | chpasswd
-              
-              # Create the directory and set ownership and permissions
-              mkdir -p /opt/ibm/data/guest || true
-              chown -R guest:guest /opt/ibm/data/guest || true
-              chmod -R 755 /opt/ibm/data/guest || true
+      # Generate a random password
+      password=$(openssl rand -base64 12)
+      echo "Generated password for guest user: \$password"
+
+      # Check if user exists, and create if not
+      if ! id "guest" &>/dev/null; then
+          useradd -m -u 1000 guest || true
+      fi
+
+      # Set the password for the guest user
+      echo "guest:\$password" | chpasswd
+
+      # Create the directory and set ownership and permissions
+      mkdir -p /opt/ibm/data/guest || true
+      chown -R guest:guest /opt/ibm/data/guest || true
+      chmod -R 755 /opt/ibm/data/guest || true
           volumeMounts:
             - mountPath: /opt/ibm/data
               name: informix-storage  # Mounting the same volume as the Deployment
