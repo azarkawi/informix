@@ -4,4 +4,4 @@ metadata:
   name: informix-config
   namespace: {{NAMESPACE}}
 data:
-  INFORMIX_VERSION: "{{DB_VERSION}}.FC7W1DE"
+  INFORMIX_VERSION: "{{DB_VERSION}}"
