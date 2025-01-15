@@ -28,6 +28,6 @@ spec:
       volumes:
         - name: informix-storage
           persistentVolumeClaim:
-            claimName: informix12-pvc  # PVC that should be used for the volume
+            claimName: informix-pvc  # PVC that should be used for the volume
       restartPolicy: Never
   backoffLimit: 4
