@@ -10,22 +10,23 @@ spec:
         runAsUser: 0  # Run as root to set up the permissions
       containers:
         - name: init-permissions
-          image: alpine:latest
+          image: ubuntu:20.04  # Use a more complete image like Ubuntu or install necessary tools in Alpine
           command:
             - "sh"
             - "-c"
             - |
-              # Wachtwoord genereren
+              # Install the required utilities
+              apt-get update && apt-get install -y openssl passwd sudo
+
+              # Generate a random password
               password=$(openssl rand -base64 12)
-              echo "Generated password for guest user: $password"
+              echo "Generated password for guest user: \$password"
               
-              # Maak de gebruiker aan
+              # Create the guest user and set the password
               useradd -m -u 1000 guest || true
+              echo "guest:\$password" | chpasswd
               
-              # Wachtwoord instellen voor de gebruiker
-              echo "guest:$password" | chpasswd
-              
-              # Zorg ervoor dat de map voor guest bestaat
+              # Create the directory and set ownership and permissions
               mkdir -p /opt/ibm/data/guest || true
               chown -R guest:guest /opt/ibm/data/guest || true
               chmod -R 755 /opt/ibm/data/guest || true
