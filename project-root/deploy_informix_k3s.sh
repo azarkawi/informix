@@ -19,11 +19,6 @@ echo "Gebruikmakend van Node IP: $NODE_IP"
 INFO_FILE="connection_info.txt"
 > $INFO_FILE  # Maak het bestand leeg
 
-# Functie om een veilige willekeurige wachtwoord te genereren
-generate_password() {
-  openssl rand -base64 12
-}
-
 # Zorg dat de output directory bestaat
 mkdir -p $OUTPUT_DIR
 
@@ -31,8 +26,6 @@ mkdir -p $OUTPUT_DIR
 for ((i=1; i<=NUM_STUDENTS; i++))
 do
   STUDENT="student-$i"
-  PASSWORD=$(generate_password)
-  ENCODED_PASSWORD=$(echo -n "$PASSWORD" | base64)
   NAMESPACE="${STUDENT}-ns"
   PVC_NAME="${STUDENT}-pvc"
   SECRET_NAME="${STUDENT}-secret"
@@ -72,6 +65,12 @@ do
       -e "s/{{NODE_PORT}}/${NODE_PORT}/g" \
       -e "s/{{NODE_PORT_PLUS_ONE}}/${NODE_PORT_PLUS_ONE}/g" \
       "$TEMPLATE_DIR/service-template.yaml" > "$STUDENT_DIR/service.yaml"
+  sed -e "s/{{NAMESPACE}}/${NAMESPACE}/g" \
+      "$TEMPLATE_DIR/pv-template.yaml" > "$STUDENT_DIR/pv.yaml"
+  sed -e "s/{{NAMESPACE}}/${NAMESPACE}/g" \
+      "$TEMPLATE_DIR/job-template.yaml" > "$STUDENT_DIR/init-informix-permissions.yaml"
+
+      
 
   # Toepassen van de YAML-bestanden op het cluster
   kubectl apply -f "$STUDENT_DIR/namespace.yaml"
@@ -80,7 +79,8 @@ do
   kubectl apply -f "$STUDENT_DIR/secret.yaml"
   kubectl apply -f "$STUDENT_DIR/deployment.yaml"
   kubectl apply -f "$STUDENT_DIR/service.yaml"
-
+  kubectl apply -f "$STUDENT_DIR/pv.yaml"
+  kubectl apply -f "$STUDENT_DIR/init-informix-permissions.yaml"
   # Verbindingsinformatie opslaan
   echo "${STUDENT}:${PASSWORD} ${NODE_IP}:${NODE_PORT}" >> $INFO_FILE
 
