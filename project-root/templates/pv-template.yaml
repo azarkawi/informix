@@ -8,6 +8,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: "local-path"  # Voeg de storageClassName toe om overeen te komen met de PVC
   hostPath:
     path: /data/informix
