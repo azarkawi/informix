@@ -10,35 +10,24 @@ spec:
         runAsUser: 0  # Run as root to set up the permissions
       containers:
         - name: init-permissions
-          image: alpine:latest
+          image: alpine
           command:
             - "sh"
             - "-c"
             - |
-              # Install the required utilities
-              apk update 
-              apk add openssl shadow sudo
-
-              # Generate a random password
-              password=$(openssl rand -base64 12)
-              echo "Generated password for guest user: \$password"
-              
-              # Create the guest user and set the password
-              if ! id "guest" &>/dev/null; then
-                  useradd -m -u 1000 guest || true
-              fi
-              echo "guest:\$password" | chpasswd
-              
-              # Create the directory and set ownership and permissions
-              mkdir -p /opt/ibm/data/guest || true
-              chown -R guest:guest /opt/ibm/data/guest || true
-              chmod -R 755 /opt/ibm/data/guest || true
+              # Create the user and group with UID 200 and GID 200
+              addgroup -g 200 informix || true
+              adduser -u 200 -G informix informix || true
+              # Set the appropriate ownership and permissions
+              chown -R informix:informix /opt/ibm/data || true
+              chmod -R 755 /opt/ibm/data || true
+              chmod 660 /opt/ibm/data/spaces/*.000 || true
           volumeMounts:
             - mountPath: /opt/ibm/data
               name: informix-storage  # Mounting the same volume as the Deployment
       volumes:
         - name: informix-storage
           persistentVolumeClaim:
-            claimName: informix-pvc  # PVC that should be used for the volume
+            claimName: informix12-pvc  # PVC that should be used for the volume
       restartPolicy: Never
   backoffLimit: 4
