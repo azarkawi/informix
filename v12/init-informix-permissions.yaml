@@ -10,13 +10,13 @@ spec:
         runAsUser: 0  # Run as root to set up the permissions
       containers:
         - name: init-permissions
-          image: ubuntu:20.04  # Use a more complete image like Ubuntu or install necessary tools in Alpine
+          image: alpine:latest
           command:
             - "sh"
             - "-c"
             - |
               # Install the required utilities
-              apt-get update && apt-get install -y openssl passwd sudo
+              apk update && apk add openssl shadow sudo
 
               # Generate a random password
               password=$(openssl rand -base64 12)
