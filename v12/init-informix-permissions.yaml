@@ -16,7 +16,8 @@ spec:
             - "-c"
             - |
               # Install the required utilities
-              apk update && apk add openssl passwd sudo shadow
+              apk update 
+              apk add openssl shadow sudo
 
               # Generate a random password
               password=$(openssl rand -base64 12)
