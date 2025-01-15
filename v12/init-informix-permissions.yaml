@@ -15,21 +15,20 @@ spec:
             - "sh"
             - "-c"
             - |
-              # Create the 'informix' group and user with UID 200
-              groupadd -g 200 informix || true
-              adduser -u 200 -g informix -s /bin/bash informix || true
-              # Create the 'user2' group and user with UID 201
-              groupadd -g 201 user2 || true
-              adduser -u 201 -g user2 -s /bin/bash user2 || true
-              # Create directory for user2 if it doesn't exist
-              mkdir -p /opt/ibm/data/user2 || true
-              # Set ownership and permissions for directories
-              chown -R informix:informix /opt/ibm/data || true
-              chmod -R 755 /opt/ibm/data || true
-              chmod 660 /opt/ibm/data/spaces/*.000 || true
-              # Set ownership and permissions for the user2 directory
-              chown -R user2:user2 /opt/ibm/data/user2 || true
-              chmod -R 755 /opt/ibm/data/user2 || true
+              # Wachtwoord genereren
+              password=$(openssl rand -base64 12)
+              echo "Generated password for guest user: $password"
+              
+              # Maak de gebruiker aan
+              useradd -m -u 1000 guest || true
+              
+              # Wachtwoord instellen voor de gebruiker
+              echo "guest:$password" | chpasswd
+              
+              # Zorg ervoor dat de map voor guest bestaat
+              mkdir -p /opt/ibm/data/guest || true
+              chown -R guest:guest /opt/ibm/data/guest || true
+              chmod -R 755 /opt/ibm/data/guest || true
           volumeMounts:
             - mountPath: /opt/ibm/data
               name: informix-storage  # Mounting the same volume as the Deployment
