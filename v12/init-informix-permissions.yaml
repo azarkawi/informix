@@ -10,17 +10,17 @@ spec:
         runAsUser: 0  # Run as root to set up the permissions
       containers:
         - name: init-permissions
-          image: alpine
+          image: alpine:latest
           command:
             - "sh"
             - "-c"
             - |
               # Create the 'informix' group and user with UID 200
               groupadd -g 200 informix || true
-              useradd -u 200 -g informix -s /bin/bash informix || true
+              adduser -u 200 -g informix -s /bin/bash informix || true
               # Create the 'user2' group and user with UID 201
               groupadd -g 201 user2 || true
-              useradd -u 201 -g user2 -s /bin/bash user2 || true
+              adduser -u 201 -g user2 -s /bin/bash user2 || true
               # Create directory for user2 if it doesn't exist
               mkdir -p /opt/ibm/data/user2 || true
               # Set ownership and permissions for directories
