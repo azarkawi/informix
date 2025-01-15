@@ -39,4 +39,4 @@ spec:
       volumes:
         - name: informix-storage
           persistentVolumeClaim:
-            claimName: informix-pvc
+            claimName: {{NAMESPACE}}-pvc
