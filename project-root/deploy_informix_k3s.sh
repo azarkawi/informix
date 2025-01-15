@@ -73,12 +73,12 @@ do
 
   # Toepassen van de YAML-bestanden op het cluster
   kubectl apply -f "$STUDENT_DIR/namespace.yaml"
-  kubectl apply -f "$STUDENT_DIR/configmap.yaml"
+  kubectl apply -f "$STUDENT_DIR/pv.yaml"
   kubectl apply -f "$STUDENT_DIR/pvc.yaml"
+  kubectl apply -f "$STUDENT_DIR/configmap.yaml"
   kubectl apply -f "$STUDENT_DIR/secret.yaml"
   kubectl apply -f "$STUDENT_DIR/deployment.yaml"
   kubectl apply -f "$STUDENT_DIR/service.yaml"
-  kubectl apply -f "$STUDENT_DIR/pv.yaml"
   kubectl apply -f "$STUDENT_DIR/init-informix-permissions.yaml"
 
   # Verbindingsinformatie opslaan
